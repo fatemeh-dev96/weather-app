@@ -1,7 +1,20 @@
+import WeatherIcon from "@/components/weather/WeatherIcon";
 
-function WeatherInfo(props) {
+interface  Props{
+    weather:Weather;
+}
+function WeatherInfo({weather}:Props) {
     return (
-        <div></div>
+        <div className={"grid grid-cols-2 mb-12"}>
+            <div>
+                <h1 className={"text-2xl"}>{weather.city}</h1>
+                <div>{weather.description}</div>
+                <div>Humidity: <span className={"bg-amber-400"}>{weather.humidity}</span> wind: <span className={"bg-amber-400"}>{weather.wind}</span></div>
+            </div>
+            <div>
+<WeatherIcon size={36} icon={weather.icon}/>
+            </div>
+        </div>
     );
 }
 
