@@ -1,7 +1,7 @@
 import SearchForm from "@/components/weather/SearchForm";
 import WeatherInfo from "@/components/weather/WeatherInfo";
 import ForcastList from "@/components/weather/ForcastList";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {callForecastApi, callWeatherApi} from "@/api/api";
 import ForcastItem from "@/components/weather/ForcastItem";
 import {ForcastResponse} from "@/types/api/ForcastResponse";
@@ -44,6 +44,7 @@ interface CurrentConditions {
 }
 
 function Weather({address}:Props) {
+    const [cityState, setCityState] = useState(address);
      const [weatherState,setWeatherState]=useState<Weather>({
          // city:city,
          // city:'',
@@ -73,8 +74,9 @@ function Weather({address}:Props) {
         humidity:0,
     });
 
-    const getWeatherData =async (address:string)=>{
-       const response= await callWeatherApi({address});
+    // const getWeatherData =async (address:string)=>{
+    const getWeatherData =async ()=>{
+        const response= await callWeatherApi({address:cityState});
        const weather:Weather={
            // city:response.name,
            // wind:response.wind.speed,
@@ -106,9 +108,15 @@ function Weather({address}:Props) {
          setForcastState(forcastResponse);
      }
      // if(weatherState.city.length ===0){
-    if(weatherState.address.length ===0){
-        getWeatherData(address);
-     }
+    // if(weatherState.address.length ===0){
+    //     getWeatherData(address);
+    //  }
+    // useeffect
+    useEffect(() => {
+        // getWeatherData(address);
+        getWeatherData();
+
+    },[cityState]);
     return (
         <div className={"flex flex-col items-center"}>
              {/*<Image src={'logo.svg'} alt={'logo'} width={86} height={44}/>*/}
@@ -116,7 +124,9 @@ function Weather({address}:Props) {
             {/*<Image src="/logo.png" alt="logo" width={86} height={44} />*/}
 
             <div className={"bg-white shadow mt-4 rounded-2xl p-8 py-16"}>
-                <SearchForm city={address} getWeatherData={getWeatherData}/>
+                {/*<SearchForm city={address} getWeatherData={getWeatherData}/>*/}
+                <SearchForm city={cityState} setCityState={setCityState} />
+
                 <WeatherInfo weather={weatherState}/>
                 {forcastState && <ForcastList forecast={forcastState}/>}
             </div>
